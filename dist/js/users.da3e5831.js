@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["users"],{"4c7a":function(e,n,s){"use strict";s.r(n);var t=function(){var e=this,n=e.$createElement,s=e._self._c||n;return s("div",[e._v(" users ")])},r=[],u={},c=u,a=s("2877"),i=Object(a["a"])(c,t,r,!1,null,"643245b8",null);n["default"]=i.exports}}]);
+//# sourceMappingURL=users.da3e5831.js.map
