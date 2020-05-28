@@ -3,11 +3,11 @@ module.exports = {
   publicPath: process.env.NODE_ENV === 'production'
   ? '/gestionstck/'
   : '/',
-  outputDir:path.resolve(__dirname,"../server/public"),
+  outputDir:path.resolve(__dirname,"../server/dist"),
   devServer:{
    proxy:{
      '/api':{
-       target:'http://localhost:3000'
+       target:'http://localhost:5000'
      }
    }
   },
