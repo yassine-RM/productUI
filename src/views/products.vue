@@ -2,15 +2,15 @@
   <div class="products">
     <v-row>
       <v-col cols="12">
-       <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn color="cyan" icon v-on="on" @click="addProduct(true,7)">
-                  <v-icon>mdi-plus-outline</v-icon>
-                </v-btn>
-              </template>
-              <span>New product</span>
-            </v-tooltip>
-       <new-product/>
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-btn color="cyan" text rounded outlined v-on="on" @click="addProduct(true,category.id)">
+              <v-icon>mdi-plus-outline</v-icon>new product 
+            </v-btn>
+          </template>
+          <span>New product</span>
+        </v-tooltip>
+        <new-product/>
       </v-col>
     </v-row>
     <v-row>
@@ -35,7 +35,7 @@
           <v-card-actions>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn color="green" icon v-on="on" @click="showProductForm(true,false,product)">
+                <v-btn color="orange" icon v-on="on" @click="showProductForm(true,false,product)">
                   <v-icon>mdi-pencil-outline</v-icon>
                 </v-btn>
               </template>
@@ -79,11 +79,11 @@ export default {
     showProductForm(state, btnAdd, product) {
       this.$store.commit("editProduct", { state, btnAdd, product });
     },
-    addProduct(state,category_id) {
-      this.$store.commit("setProductState", { state,category_id });
+    addProduct(state, category_id) {
+      this.$store.commit("setState", { state, type:'product',category_id });
     },
     deleteProduct(product) {
-      this.$store.dispatch("deleteProduct", product);
+      this.$store.dispatch("delete", {type:"product",product});
     }
   }
 };

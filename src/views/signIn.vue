@@ -6,6 +6,7 @@
           <v-card shaped min-height="400">
             <v-card-title primary-title>
               <h3 class="headline red--text sign-in-title">Sign In</h3>
+              <v-alert dense @input="closeAlert()" text border="right" dismissible transition="slide-x-transition" type="error" v-if="error.length">{{ error }}</v-alert>
             </v-card-title>
             <v-card-text>
               <v-form ref="signin">
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+import {mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -63,11 +65,19 @@ export default {
       }
     };
   },
+  mounted() {
+    this.closeAlert()
+  },
+  computed: {
+    ...mapGetters({"error":'getError'})
+  },
   methods: {
+    closeAlert(){
+      this.$store.commit('setError',"")
+    },
     login() {
-      let signIn=this.$refs.signin.validate()
-      if(signIn)
-      this.$store.dispatch("login", this.user);
+      let signIn = this.$refs.signin.validate();
+      if (signIn) this.$store.dispatch("login", this.user);
     }
   }
 };

@@ -1,17 +1,17 @@
 <template>
   <div class="categories">
-   <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn color="cyan" icon v-on="on" @click="showCategoryAddForm(true,true)">
-                  <v-icon>mdi-plus-outline</v-icon>
-                </v-btn>
-              </template>
-              <span>New category</span>
-            </v-tooltip>
-       <new-category/>
+    <v-tooltip top>
+      <template v-slot:activator="{ on }">
+        <v-btn color="cyan" text rounded outlined v-on="on" @click="showCategoryAddForm(true,true)">
+          <v-icon>mdi-plus-outline</v-icon>new category
+        </v-btn>
+      </template>
+      <span>New category</span>
+    </v-tooltip>
+    <new-category />
     <v-row>
       <v-col md="4" v-for="(category, index) in categories" :key="index">
-        <v-card class="mx-auto" max-width="344" outlined v-if="user.id==category.UserId">
+        <v-card class="mx-auto" max-width="344" outlined>
           <v-list-item three-line>
             <v-list-item-content>
               <div
@@ -32,7 +32,7 @@
           <v-card-actions>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn color="green" icon v-on="on" @click="showProductForm(true,category.id)">
+                <v-btn  small color="green"  icon v-on="on" @click="showProductForm(true,category.id)">
                   <v-icon>mdi-cart-plus</v-icon>
                 </v-btn>
               </template>
@@ -40,7 +40,7 @@
             </v-tooltip>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn color="cyan" icon v-on="on" to="/products">
+                <v-btn  small color="cyan" icon v-on="on" @click="setCategory(category)">
                   <v-icon>mdi-view-list</v-icon>
                 </v-btn>
               </template>
@@ -48,7 +48,12 @@
             </v-tooltip>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn color="orange" icon v-on="on" @click="showCategoryEditForm(true,false,category)">
+                <v-btn  small
+                  color="orange"
+                  icon
+                  v-on="on"
+                  @click="showCategoryEditForm(true,false,category)"
+                >
                   <v-icon>mdi-pencil-outline</v-icon>
                 </v-btn>
               </template>
@@ -56,7 +61,7 @@
             </v-tooltip>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn color="red" icon v-on="on" @click="deleteCategory(product)">
+                <v-btn  small color="red" icon v-on="on" @click="deleteCategory(category)">
                   <v-icon>mdi-delete-sweep-outline</v-icon>
                 </v-btn>
               </template>
@@ -77,13 +82,13 @@ import category from "@/components/categoryForm";
 export default {
   components: {
     "new-product": product,
-    "new-category": category,
+    "new-category": category
   },
   data() {
     return {};
   },
-  created() {
-    this.$store.dispatch("loadCategories");
+  mounted() {
+    this.$store.dispatch("loadCategories", this.user.id);
   },
   computed: {
     ...mapGetters({ categories: "getCategories" }),
@@ -91,13 +96,25 @@ export default {
   },
   methods: {
     showProductForm(state, category_id) {
-      this.$store.commit("setState", { state, category_id,type:'product' });
+      this.$store.commit("setState", { state, category_id, type: "product" });
     },
-    showCategoryEditForm(state,add,category) {
-      this.$store.commit("setState", { state,type:'category',category,add });
+    deleteCategory(category) {
+      this.$store.dispatch("delete",{type:"category",category});
     },
-    showCategoryAddForm(state,add) {
-      this.$store.commit("setState", { state,type:'category',add });
+    setCategory(category) {
+      console.log(category)
+      this.$store.commit("setCategory",category);
+    },
+    showCategoryEditForm(state, add, category) {
+      this.$store.commit("setState", {
+        state,
+        type: "category",
+        category,
+        add
+      });
+    },
+    showCategoryAddForm(state, add) {
+      this.$store.commit("setState", { state, type: "category", add });
     }
   }
 };

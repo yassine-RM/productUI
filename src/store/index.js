@@ -8,12 +8,14 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     user: {},
+    users: [],
     categories: [],
     addCategoryBtn: true,
     category: {
       name: null,
       description: null,
       state: false,
+      Products:[]
     },
     addProductBtn: true,
     product: {
@@ -22,13 +24,18 @@ export default new Vuex.Store({
       price: null,
       state: false,
     },
-    errors: [],
+    error:{},
   },
   mutations: {
     deleteCategoryProduct: (state, prd) => {
       let products = state.category.Products;
       let res = products.filter((product) => product.id != prd.id);
       state.category.Products = res;
+    },
+    deleteCategory: (state, cat) => {
+      let categories = state.categories;
+      let res = categories.filter((category) => category.id != cat.id);
+      state.categories = res;
     },
     addCategoryProduct: (state, prd) => {
       state.category.Products.push(prd);
@@ -43,6 +50,25 @@ export default new Vuex.Store({
     setCategories: (state, categories) => {
       state.categories = categories;
     },
+    setUsers: (state, users) => {
+      state.users = users;
+    },
+    setError:(state,error)=>{
+      state.error=error
+    },
+    setCategory:(state,category)=>{
+     state.category=category
+     router.push('/products')
+    },
+    updateCategory: (state, category) => {
+      state.categories.forEach(cat=>{
+        if (cat.id===category.id) {
+          console.log(cat.name);
+          return cat=category
+          
+        }
+      })
+    },
     setState: (state, data) => {
       if (data.type == "product") {
         state.addProductBtn = data.state;
@@ -50,7 +76,6 @@ export default new Vuex.Store({
           state: data.state,
           name: "",
           price: "",
-          CategoryId: data.category_id,
         };
       } else {
         state.addCategoryBtn = data.add;
@@ -84,6 +109,12 @@ export default new Vuex.Store({
     getCategories: (state) => {
       return state.categories;
     },
+    getError:(state)=>{
+       return state.error
+    },
+    getUsers:(state)=>{
+       return state.users
+    }
   },
   actions: {
     login: ({ commit }, user) => {
@@ -93,25 +124,41 @@ export default new Vuex.Store({
           let data = res.data;
           localStorage.setItem("token", data.token);
           commit("setUser", data.user);
-          await router.push("/");
+            await router.push("/");
         })
         .catch((err) => {
-          console.log("error :", err);
+          if (err.response.status===401) {
+            commit('setError',"Sorry login or password incorrect !!!")
+          }
         });
     },
-    loadCategories: ({ commit }) => {
+    loadCategories: ({ commit },userId) => {
       axios
-        .get("categories")
+        .get(`categories/${userId}`)
         .then((res) => {
-          console.log(res.data);
           commit("setCategories", res.data);
         })
         .catch((err) => {
           console.log("err", err);
-          if (err.code === 401) {
-            localStorage.removeItem("token");
-            router.push({ name: "signIn" });
-          }
+          // if (err.response.status === 401) {
+          //   localStorage.removeItem("token");
+          //   router.push({ name: "signIn" });
+          // }
+        });
+    },
+    users: ({ commit }) => {
+      axios
+      .get('users')
+      .then((res) => {
+        console.log("users",res.data);
+        commit("setUsers", res.data);
+        })
+        .catch((err) => {
+          console.log("err", err);
+          // if (err.response.status === 401) {
+          //   localStorage.removeItem("token");
+          //   router.push({ name: "signIn" });
+          // }
         });
     },
     add: ({ commit }, data) => {
@@ -127,10 +174,11 @@ export default new Vuex.Store({
             console.log("error :", err);
           });
       } else if (data.type == "category") {
-        data.category.UserId = 4;
         axios
           .post(`categories`, data.category)
           .then((res) => {
+            console.log("res:",res);
+            
             commit("setState", { type: "category", state: false });
             commit("addCategory", res.data.category);
           })
@@ -142,35 +190,64 @@ export default new Vuex.Store({
           .post(`sign-up`, data.user)
           .then(async (res) => {
             let result = res.data;
-            localStorage.setItem("token", data.token);
+            localStorage.setItem("token", result.token);
             commit("setUser", result.user);
             await router.push("/");
           })
           .catch((err) => {
-            console.log("error :", err);
+            if (err.response.status===422) {
+              commit('setError',"Sorry error durring registred user !!!")
+            }
           });
       }
     },
-    updateProduct: ({ commit }, product) => {
-      axios
-        .put(`products/${product.id}`, product)
+    update: ({ commit }, data) => {
+      if (data.type=="product") {
+        axios
+        .put(`products/${data.product.id}`, data.product)
         .then(() => {
-          commit("setProductState", false);
+          commit("setState",{ state:false,type:'product'});
         })
         .catch((err) => {
           console.log("error :", err);
         });
+      }else if (data.type=="category") {
+        
+        axios
+        .put(`categories/${data.category.id}`, data.category)
+        .then(() => {
+          commit("updateCategory",data.category);
+          commit("setState",{ state:false,type:'category'});
+        })
+        .catch((err) => {
+          console.log("error :", err);
+        });
+      }
     },
-    deleteProduct: ({ commit }, product) => {
-      axios
-        .delete(`products/${product.id}`)
+    delete: ({ commit }, data) => {
+      if (data.type=="product") {
+        axios
+        .delete(`products/${data.product.id}`)
         .then((res) => {
-          commit("deleteCategoryProduct", product);
+          commit("deleteCategoryProduct", data.product);
           console.log("success", res);
         })
         .catch((err) => {
           console.log("error :", err);
         });
+      }else if (data.type=="category") {
+        axios
+        .delete(`categories/${data.category.id}`)
+        .then((res) => {
+          commit("deleteCategory", data.category);
+          console.log("success", res);
+        })
+        .catch((err) => {
+          console.log("error :", err);
+        });
+        console.log("ok");
+        
+      }
     },
   },
   modules: {},

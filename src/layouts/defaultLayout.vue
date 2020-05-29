@@ -15,12 +15,17 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app flat="">
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-app-bar app flat>
+      <v-app-bar-nav-icon small  @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
-      <v-btn @click="logOut()" icon class="mx-1">
-        <v-icon>mdi-exit-to-app</v-icon>
-      </v-btn>
+      <v-tooltip top>
+        <template v-slot:activator="{ on }">
+          <v-btn outlined v-on="on" @click="logOut()" small icon class="mx-1">
+            <v-icon small>mdi-exit-to-app</v-icon>
+          </v-btn>
+        </template>
+        <span>sign out</span>
+      </v-tooltip>
     </v-app-bar>
 
     <router-view />
@@ -51,11 +56,11 @@ export default {
     };
   },
   methods: {
-    logOut(){
-      localStorage.removeItem('token')
-      this.$router.push({name:'signIn'})
+    logOut() {
+      localStorage.removeItem("token");
+      this.$router.push({ name: "signIn" });
     }
-  },
+  }
 };
 </script>
 

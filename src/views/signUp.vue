@@ -6,6 +6,16 @@
           <v-card shaped min-height="400" ref="signUp">
             <v-card-title primary-title>
               <h3 class="headline red--text sign-up-title">Sign Up</h3>
+              <v-alert
+                dense
+                @input="closeAlert()"
+                text
+                border="right"
+                dismissible
+                transition="slide-x-transition"
+                type="error"
+                v-if="error.length"
+              >{{ error }}</v-alert>
             </v-card-title>
             <v-card-text>
               <v-form ref="signup">
@@ -42,9 +52,10 @@
                   label="Password"
                   type="password"
                 ></v-text-field>
-              <v-btn @click="register()" small rounded block color="#9b32a8" dark>
-                <v-icon>mdi-account-plus-outline</v-icon>
-              </v-btn>
+
+                <v-btn @click="register()" small rounded block color="#9b32a8" dark>
+                  <v-icon>mdi-account-plus-outline</v-icon>
+                </v-btn>
               </v-form>
             </v-card-text>
           </v-card>
@@ -55,6 +66,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   data() {
     return {
@@ -76,15 +88,30 @@ export default {
           v => !!v || "Password is required",
           v =>
             (v && v.length > 6) || "Password must be 	greater than 6 characters"
+        ],
+        confirmPassword: [
+          v => !!v || "Confirm password is required",
+          v =>
+            (v && v.length > 6) ||
+            "Confirm password must be 	greater than 6 characters"
         ]
       }
     };
   },
+  mounted() {
+    this.closeAlert();
+  },
+  computed: {
+    ...mapState(['error'])
+  },
   methods: {
+    closeAlert() {
+      this.$store.commit("setError", "");
+    },
     register() {
-      let signUp=this.$refs.signup.validate()
-      if(signUp)
-      this.$store.dispatch("register", this.user);
+      let signUp = this.$refs.signup.validate();
+      if (signUp)
+        this.$store.dispatch("add", { type: "user", user: this.user });
     }
   }
 };
