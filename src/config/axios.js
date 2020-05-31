@@ -1,5 +1,7 @@
 import axios from "axios";
-const token = localStorage.getItem("token");
+let token = localStorage.getItem("token");
+console.log('token',token);
+
 export default axios.create({
   baseURL: "https://productserv.herokuapp.com/api/",
   headers: { authorization: `Bearer ${token}` },

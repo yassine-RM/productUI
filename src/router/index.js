@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "@/store";
 /*----------------------------import components----------------------------------*/
 const signIn = () =>
   import(/* webpackChunkName: "sign-in" */ "@/views/signIn.vue");
@@ -16,6 +17,7 @@ const products = () =>
 const users = () => import(/* webpackChunkName: "users" */ "@/views/users.vue");
 
 import auth from '@/auth'
+let isAdmin =store.state.user.isAdmin
 
 Vue.use(VueRouter);
 const routes = [
@@ -60,6 +62,12 @@ const routes = [
       {
         path: "/users",
         name: "users",
+        beforeEnter: (to, from, next) => {
+          if(isAdmin)
+          next()
+          else
+          next({name:'categories'})
+        },
         // which is lazy-loaded when the route is visited.
         component: users,
       },

@@ -19,7 +19,6 @@ export default new Vuex.Store({
     },
     addProductBtn: true,
     product: {
-      CategoryId: 2,
       name: null,
       price: null,
       state: false,
@@ -76,6 +75,7 @@ export default new Vuex.Store({
           state: data.state,
           name: "",
           price: "",
+          categoryId:data.category_id
         };
       } else {
         state.addCategoryBtn = data.add;
@@ -122,9 +122,11 @@ export default new Vuex.Store({
         .post(`sign-in`, user)
         .then(async (res) => {
           let data = res.data;
-          localStorage.setItem("token", data.token);
-          commit("setUser", data.user);
-            await router.push("/");
+          await localStorage.setItem("token", data.token);
+          await commit("setUser", data.user);
+          console.log(data.user);
+          
+            await router.push("/users");
         })
         .catch((err) => {
           if (err.response.status===401) {
@@ -132,9 +134,9 @@ export default new Vuex.Store({
           }
         });
     },
-    loadCategories: ({ commit },userId) => {
+    loadCategories: ({ commit },user) => {
       axios
-        .get(`categories/${userId}`)
+        .get(`categories/${user.id}/${user.isAdmin}`)
         .then((res) => {
           commit("setCategories", res.data);
         })
@@ -163,7 +165,7 @@ export default new Vuex.Store({
     },
     add: ({ commit }, data) => {
       if (data.type == "product") {
-        let category_id = data.CategoryId;
+        let category_id = data.product.categoryId;
         axios
           .post(`products/${category_id}`, data.product)
           .then((res) => {

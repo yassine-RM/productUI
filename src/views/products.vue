@@ -2,20 +2,30 @@
   <div class="products">
     <v-row>
       <v-col cols="12">
+        <v-btn color="cyan" icon to="/">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-btn color="cyan" text rounded outlined v-on="on" @click="addProduct(true,category.id)">
-              <v-icon>mdi-plus-outline</v-icon>new product 
+            <v-btn
+              color="cyan"
+              text
+              rounded
+              outlined
+              v-on="on"
+              @click="addProduct(true,category.id)"
+            >
+              <v-icon>mdi-plus-outline</v-icon>new product
             </v-btn>
           </template>
           <span>New product</span>
         </v-tooltip>
-        <new-product/>
+        <new-product />
       </v-col>
     </v-row>
     <v-row>
       <v-col md="4" v-for="(product, index) in category.Products" :key="index">
-        <v-card class="mx-auto" max-width="344" outlined>
+        <v-card class="mx-auto" max-width="344" outlined hover>
           <v-list-item three-line>
             <v-list-item-content>
               <div
@@ -80,10 +90,10 @@ export default {
       this.$store.commit("editProduct", { state, btnAdd, product });
     },
     addProduct(state, category_id) {
-      this.$store.commit("setState", { state, type:'product',category_id });
+      this.$store.commit("setState", { state, type: "product", category_id });
     },
     deleteProduct(product) {
-      this.$store.dispatch("delete", {type:"product",product});
+      this.$store.dispatch("delete", { type: "product", product });
     }
   }
 };

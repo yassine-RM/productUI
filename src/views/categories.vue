@@ -11,7 +11,7 @@
     <new-category />
     <v-row>
       <v-col md="4" v-for="(category, index) in categories" :key="index">
-        <v-card class="mx-auto" max-width="344" outlined>
+        <v-card class="mx-auto" max-width="344" outlined hover  >
           <v-list-item three-line>
             <v-list-item-content>
               <div
@@ -88,7 +88,7 @@ export default {
     return {};
   },
   mounted() {
-    this.$store.dispatch("loadCategories", this.user.id);
+    this.$store.dispatch("loadCategories", this.user);
   },
   computed: {
     ...mapGetters({ categories: "getCategories" }),

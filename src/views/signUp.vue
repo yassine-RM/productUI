@@ -3,9 +3,8 @@
     <v-container fluid>
       <v-row justify="center" no-gutters>
         <v-col md="10">
-          <v-card shaped min-height="400" ref="signUp">
+          <v-card shaped min-height="440" ref="signUp">
             <v-card-title primary-title>
-              <h3 class="headline red--text sign-up-title">Sign Up</h3>
               <v-alert
                 dense
                 @input="closeAlert()"
@@ -16,6 +15,9 @@
                 type="error"
                 v-if="error.length"
               >{{ error }}</v-alert>
+              <v-avatar width="140" height="120">
+                <img src="@/assets/img/avatar.jpg" alt="signup" />
+              </v-avatar>
             </v-card-title>
             <v-card-text>
               <v-form ref="signup">
@@ -53,7 +55,7 @@
                   type="password"
                 ></v-text-field>
 
-                <v-btn @click="register()" small rounded block color="#9b32a8" dark>
+                <v-btn @click="register()" small rounded width="200" color="#991ada" dark class="btn-sign-up">
                   <v-icon>mdi-account-plus-outline</v-icon>
                 </v-btn>
               </v-form>
@@ -66,7 +68,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -102,7 +104,7 @@ export default {
     this.closeAlert();
   },
   computed: {
-    ...mapState(['error'])
+    ...mapState(["error"])
   },
   methods: {
     closeAlert() {
@@ -119,19 +121,41 @@ export default {
 
 <style scoped lang="scss">
 .sign-up ::v-deep {
-  .v-card {
-    background: url("../assets/img/auth-back.jpg") !important;
-    background-repeat: no-repeat;
-    background-size: 100% 100% !important;
+  @media (min-width: 520px) {
+    .v-card {
+      box-shadow: none !important;
+      background: url("../assets/img/auth-back.jpg");
+      background-repeat: no-repeat;
+      background-size: 100% 100% !important;
+    }
+    .v-card__text,
+    .v-card__title,
+    .v-card__actions {
+      width: 400px !important;
+      margin-left: auto !important;
+    }
+    .sign-up-title {
+      margin: auto;
+    }
+    .v-avatar {
+      margin: auto;
+    }
   }
-  .v-card__text,
-  .v-card__title,
-  .v-card__actions {
-    width: 400px !important;
-    margin-left: auto !important;
-  }
-  .sign-up-title {
-    margin: auto;
+  @media (max-width: 520px) {
+    .v-card {
+      box-shadow: none !important;
+      background: none !important;
+      width: 100%;
+    }
+    .v-card__text,
+    .v-card__title,
+    .v-card__actions {
+      display: block;
+      text-align: center;
+    }
+    .btn-sign-up{
+      width: 100% !important;
+    }
   }
 }
 </style>

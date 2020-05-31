@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <v-app-bar app flat="">
+  <v-container fluid>
+    <v-app-bar class="white" app flat="">
       <v-spacer></v-spacer>
       
       <v-btn to="/auth/sign-in"  text  small rounded     class="mx-1">Sign In</v-btn>

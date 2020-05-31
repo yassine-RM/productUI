@@ -2,11 +2,22 @@
   <div class="sign-in">
     <v-container fluid>
       <v-row justify="center" no-gutters>
-        <v-col md="10">
-          <v-card shaped min-height="400">
+        <v-col md="10" sm="12">
+          <v-card shaped min-height="440">
             <v-card-title primary-title>
-              <h3 class="headline red--text sign-in-title">Sign In</h3>
-              <v-alert dense @input="closeAlert()" text border="right" dismissible transition="slide-x-transition" type="error" v-if="error.length">{{ error }}</v-alert>
+              <v-alert
+                dense
+                @input="closeAlert()"
+                text
+                border="right"
+                dismissible
+                transition="slide-x-transition"
+                type="error"
+                v-if="error.length"
+              >{{ error }}</v-alert>
+              <v-avatar width="140" height="120">
+                <img src="@/assets/img/avatar.jpg" alt="signup" />
+              </v-avatar>
             </v-card-title>
             <v-card-text>
               <v-form ref="signin">
@@ -31,7 +42,7 @@
                   label="Password"
                   type="password"
                 ></v-text-field>
-                <v-btn @click="login()" small rounded block color="#991ada" dark>
+                <v-btn @click="login()" small rounded width="200" color="#991ada" dark class="btn-sign-in">
                   <v-icon>mdi-key-outline</v-icon>
                 </v-btn>
               </v-form>
@@ -44,7 +55,7 @@
 </template>
 
 <script>
-import {mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -66,14 +77,14 @@ export default {
     };
   },
   mounted() {
-    this.closeAlert()
+    this.closeAlert();
   },
   computed: {
-    ...mapGetters({"error":'getError'})
+    ...mapGetters({ error: "getError" })
   },
   methods: {
-    closeAlert(){
-      this.$store.commit('setError',"")
+    closeAlert() {
+      this.$store.commit("setError", "");
     },
     login() {
       let signIn = this.$refs.signin.validate();
@@ -85,19 +96,41 @@ export default {
 
 <style scoped lang="scss">
 .sign-in ::v-deep {
-  .v-card {
-    background: url("../assets/img/auth-back.jpg") !important;
-    background-repeat: no-repeat;
-    background-size: 100% 100% !important;
+  @media (min-width: 520px) {
+    .v-card {
+      box-shadow: none !important;
+      background: url("../assets/img/auth-back.jpg");
+      background-repeat: no-repeat;
+      background-size: 100% 100% !important;
+    }
+    .v-card__text,
+    .v-card__title,
+    .v-card__actions {
+      width: 400px !important;
+      margin-left: auto !important;
+    }
+    .sign-in-title {
+      margin: auto;
+    }
+    .v-avatar {
+      margin: auto;
+    }
   }
-  .v-card__text,
-  .v-card__title,
-  .v-card__actions {
-    width: 400px !important;
-    margin-left: auto !important;
-  }
-  .sign-in-title {
-    margin: auto;
+  @media (max-width: 520px) {
+    .v-card {
+      box-shadow: none !important;
+      background: none !important;
+      width: 100% !important;
+    }
+    .v-card__text,
+    .v-card__title,
+    .v-card__actions {
+      text-align: center;
+      display: block;
+    }
+    .btn-sign-in{
+      width: 100% !important;
+    }
   }
 }
 </style>
